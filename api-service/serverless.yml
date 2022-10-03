@@ -1,7 +1,7 @@
 org: choliveira
 app: aws-event-demo
 custom: ${file(serverless/config/custom.yml)}
-service: api-service # Need to add the app prefix in the service name, other wise will be confusing to identify the stack on cloudFormation
+service: aws-event-demo-api-service # Need to add the app prefix in the service name, other wise will be confusing to identify the stack on cloudFormation
 frameworkVersion: '3'
 
 plugins:
