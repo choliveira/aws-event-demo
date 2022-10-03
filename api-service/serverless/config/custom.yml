@@ -1,4 +1,4 @@
-service: bff-api
+service: api-service
 defaultStage: local
 stage: ${opt:stage,self:custom.defaultStage}
 region: ${env:REGION, 'ap-southeast-2'}

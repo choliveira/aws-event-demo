@@ -1,7 +1,7 @@
 org: choliveira
 app: aws-event-demo
 custom: ${file(serverless/config/custom.yml)}
-service: ${self:custom.service}
+service: api-service
 frameworkVersion: '3'
 
 plugins:
