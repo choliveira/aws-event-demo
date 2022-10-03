@@ -1,0 +1,10 @@
+{
+  "name": "aws-event-demo",
+  "version": "0.0.1",
+  "description": "Mono repo for AWS event-driven architecture",
+  "main": "handler.ts",
+  "repository": "",
+  "author": "Carlos H. Oliveira <contact@carlosholiveira.com>",
+  "license": "MIT",
+  "private": true
+}

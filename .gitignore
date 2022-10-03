@@ -1,0 +1,10 @@
+node_modules
+bff-api/node_modules
+bff-api/coverage
+bff-api/.build
+bff-api/.serverless
+bff-api/.build
+bff-api/.env
+bff-api/.dynamodb
+bff-api/yarn-error.log
+.vscode
