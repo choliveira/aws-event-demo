@@ -1,16 +1,27 @@
 org: choliveira
 app: aws-event-demo
-service: aws-event-demo
+custom: ${file(serverless/config/custom.yml)}
+service: ${self:custom.service}
 frameworkVersion: '3'
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dynamodb-local
+  - serverless-offline
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs16.x
+  stage: ${self:custom.stage, self:custom.defaultStage}
+  region: ${self:custom.region}
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+  architecture: arm64
+  timeout: 30
+  logs:
+    restApi: true
 
 functions:
-  hello:
-    handler: handler.hello
-    events:
-      - httpApi:
-          path: /
-          method: get
+  - ${file(serverless/resources/lambda/post-payment.yml)}
+
+useDotenv: true

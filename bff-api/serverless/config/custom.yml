@@ -1,0 +1,24 @@
+service: bff-api
+defaultStage: local
+stage: ${opt:stage,self:custom.defaultStage}
+region: ${env:REGION, 'ap-southeast-2'}
+account: ${env:AWS_ACCOUNT, '587919987702'}
+
+serverless-offline:
+  httpPort: 4000
+  lambdaPort: 5000
+# dynamodb:
+#   stages:
+#     - ${env:STAGE}
+#   start:
+#     port: 8000
+#     inMemory: true
+#     migrate: true
+#     seed: true
+#   migration:
+#     dir: serverless/resources/dynamo
+#   seed:
+#     domain:
+#       sources:
+#         - table: admin-api-${env:STAGE}-page
+#           sources: [./seeds/page.json]

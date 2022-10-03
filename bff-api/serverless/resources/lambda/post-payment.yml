@@ -1,0 +1,6 @@
+post-payment:
+  handler: src/handler/post-payment.handler
+  events:
+    - http:
+        method: post
+        path: /cart/payment
