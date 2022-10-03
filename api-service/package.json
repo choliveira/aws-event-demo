@@ -1,5 +1,5 @@
 {
-  "name": "bff-api",
+  "name": "api-service",
   "version": "0.0.1",
   "description": "Mono repo for AWS event-driven architecture",
   "main": "handler.ts",
