@@ -1,4 +1,6 @@
 post-payment:
+  environment:
+    PAYMENT_TABLE: ${self:custom.paymentTable.name}
   handler: src/handler/post-payment.handler
   events:
     - http:

@@ -20,8 +20,14 @@ provider:
   timeout: 30
   logs:
     restApi: true
+  iamRoleStatements:
+    - ${file(serverless/resources/iam/payment-table-iam.yml):payment-table-iam}
 
 functions:
   - ${file(serverless/resources/lambda/post-payment.yml)}
+
+resources:
+  Resources:
+    paymentTable: ${file(serverless/resources/dynamo/payment-table.yml):paymentTable}
 
 useDotenv: true
