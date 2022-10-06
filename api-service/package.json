@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "rm -rf .build/ && kill-port 4000 && kill-port 5000 && kill-port 8000 && sls offline --verbose --noAuth start",
+    "dev": "rm -rf .build/ && kill-port 4000 && kill-port 5000 && kill-port 8000 && sls offline start",
     "build": "rm -rf .build && tsc",
     "build:swagger": "ts-node src/spec/zod-to-swagger.ts"
   },

@@ -1,0 +1,8 @@
+post-order:
+  environment:
+    ORDER_TABLE: ${self:custom.orderTable.name}
+  handler: src/handler/post-order.handler
+  events:
+    - http:
+        method: post
+        path: /order
