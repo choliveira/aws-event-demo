@@ -11,7 +11,8 @@ export const databaseService = () => {
     dynamoose.aws.ddb.local();
     return;
   }
-
+  console.log('Data base service options', options);
   const ddb = new dynamoose.aws.ddb.DynamoDB(options);
+  console.log('Data base service instantiated', ddb);
   dynamoose.aws.ddb.set(ddb);
 };
