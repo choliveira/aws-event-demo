@@ -7,5 +7,9 @@ order-table-iam:
     - dynamodb:Query
     - dynamodb:BatchGetItem
     - dynamodb:BatchWriteItem
+    - dynamodb:DescribeStream
+    - dynamodb:GetRecords
+    - dynamodb:GetShardIterator
+    - dynamodb:ListStreams
   Resource:
     - ${self:custom.orderTable.arn}

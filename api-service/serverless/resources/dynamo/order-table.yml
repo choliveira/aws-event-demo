@@ -9,3 +9,5 @@ orderTable:
     KeySchema:
       - AttributeName: id
         KeyType: HASH
+    StreamSpecification:
+      StreamViewType: NEW_IMAGE

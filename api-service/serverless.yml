@@ -23,10 +23,12 @@ provider:
   iamRoleStatements:
     - ${file(serverless/resources/iam/payment-table-iam.yml):payment-table-iam}
     - ${file(serverless/resources/iam/order-table-iam.yml):order-table-iam}
+    # - ${file(serverless/resources/iam/order-stream-iam.yml):order-stream-iam}
 
 functions:
   - ${file(serverless/resources/lambda/post-payment.yml)}
   - ${file(serverless/resources/lambda/post-order.yml)}
+  - ${file(serverless/resources/lambda/order-stream.yml)}
 
 resources:
   Resources:

@@ -1,0 +1,11 @@
+order-stream:
+  environment:
+    ORDER_TABLE: ${self:custom.orderTable.name}
+  handler: src/handler/order-stream.handler
+  events:
+    - stream:
+        type: dynamodb
+        batchSize: 3
+        startingPosition: LATEST
+        maximumRecordAgeInSeconds: 60
+        arn: ${self:custom.orderTableStreamArn}
