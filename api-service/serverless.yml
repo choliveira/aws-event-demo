@@ -23,8 +23,8 @@ provider:
   logs:
     restApi: true
   iamRoleStatements:
-    - ${file(serverless/resources/iam/order-table-iam.yml):order-table-iam}
     - ${file(serverless/resources/iam/payment-table-iam.yml):payment-table-iam}
+    - ${file(serverless/resources/iam/order-table-iam.yml):order-table-iam}
     # - ${file(serverless/resources/iam/order-stream-iam.yml):order-stream-iam}
 
 functions:
