@@ -1,6 +1,6 @@
 export const handler = async (event: any): Promise<any> => {
   try {
-    console.log('order-stream handler', event);
+    console.log('order-stream handler', JSON.stringify(event));
   } catch (error: any) {
     console.log('Error found in the order-stream handler', JSON.parse(error));
     return {

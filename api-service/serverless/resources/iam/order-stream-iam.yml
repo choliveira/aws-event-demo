@@ -1,4 +1,4 @@
-order-stream-iam:
+order-stream-iam: #remove this file, it is not needed.
   Effect: Allow
   Action:
     - dynamodb:DescribeStream
