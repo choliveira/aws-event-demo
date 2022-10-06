@@ -17,7 +17,7 @@ serverless-offline:
 
 dynamodb:
   stages:
-    - ${env:STAGE}
+    - ${self:custom.stage}
   start:
     port: 8000
     inMemory: true
@@ -26,7 +26,7 @@ dynamodb:
   migration:
     dir: serverless/resources/dynamo
   seed:
-    local:
+    domain:
       sources:
-        - table: aws-event-demo-api-service-${env:STAGE}-payment
+        - table: aws-event-demo-api-service-${self:custom.stage}-payment
           sources: [./seeds/payment.json]
