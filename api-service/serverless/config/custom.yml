@@ -15,12 +15,12 @@ paymentTableArn: !GetAtt paymentTable.Arn
 orderTable:
   name: ${self:custom.orderTableName}
   arn: ${self:custom.orderTableArn}
-  StreamArn: ${self:custom.orderTableStreamArn}
+  # StreamArn: ${self:custom.orderTableStreamArn}
 
 orderTableName: !Ref orderTable
 orderTableArn: !GetAtt paymentTable.Arn
 
-orderTableStreamArn: !GetAtt orderTable.StreamArn
+# orderTableStreamArn: !GetAtt orderTable.StreamArn
 
 #### serverless offline
 serverless-offline:
