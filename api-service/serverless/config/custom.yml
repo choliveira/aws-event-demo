@@ -4,6 +4,7 @@ stage: ${opt:stage,self:custom.defaultStage}
 region: ${env:REGION, 'ap-southeast-2'}
 account: ${env:AWS_ACCOUNT, '587919987702'}
 
+### DynamoDB Tables ######
 paymentTable:
   name: ${self:custom.paymentTableName}
   arn: ${self:custom.paymentTableArn}
@@ -11,6 +12,17 @@ paymentTable:
 paymentTableName: !Ref paymentTable
 paymentTableArn: !GetAtt paymentTable.Arn
 
+orderTable:
+  name: ${self:custom.orderTableName}
+  arn: ${self:custom.orderTableArn}
+  StreamArn: ${self:custom.orderTableStreamArn}
+
+orderTableName: !Ref orderTable
+orderTableArn: !GetAtt paymentTable.Arn
+
+orderTableStreamArn: !GetAtt orderTable.StreamArn
+
+#### serverless offline
 serverless-offline:
   httpPort: 4000
   lambdaPort: 5000
@@ -30,3 +42,5 @@ dynamodb:
       sources:
         - table: aws-event-demo-api-service-${self:custom.stage}-payment
           sources: [./seeds/payment.json]
+        - table: aws-event-demo-api-service-${self:custom.stage}-order
+          sources: [./seeds/order.json]

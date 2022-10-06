@@ -1,0 +1,13 @@
+order-stream-iam: #Not in use, test if if works without this as this iam expect single object.
+  - Effect: Allow
+    Action: # I've added all these action to the order-table-iam
+      - dynamodb:DescribeStream
+      - dynamodb:GetRecords
+      - dynamodb:GetShardIterator
+      - dynamodb:ListStreams
+    Resource:
+      - ${self:custom.orderTable.arn}
+  - Effect: Allow
+    Action: # Not sure if we need this.
+      - lambda:InvokeFunction
+    Resource: '*'
