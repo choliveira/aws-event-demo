@@ -16,6 +16,8 @@ provider:
   region: ${self:custom.region}
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    AWS_ACCESS_KEY: ${param:AWS_ACCESS_KEY, env:AWS_ACCESS_KEY}
+    AWS_SECRET_ACCESS_KEY: ${param:AWS_SECRET_ACCESS_KEY, env:AWS_SECRET_ACCESS_KEY}
   architecture: arm64
   timeout: 30
   logs:
