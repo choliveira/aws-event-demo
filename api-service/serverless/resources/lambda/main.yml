@@ -1,6 +1,0 @@
-main:
-  handler: src/handler/main.handler
-  events:
-    - http:
-        method: post
-        path: /main

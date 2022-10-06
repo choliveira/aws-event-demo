@@ -1,0 +1,13 @@
+{
+  "id": "1234-asdfg-0000",
+  "status": "approved",
+  "amountPaid": 559,
+  "price": 549,
+  "discount": 0,
+  "deliveryFee": 10,
+  "productId": "1",
+  "productTitle": "iPhone 9",
+  "costumer": "user1@mail.com",
+  "createdAt": 1664885411365,
+  "updatedAt": 1664885411365
+}
