@@ -1,8 +1,8 @@
 import * as dynamoose from 'dynamoose';
 
 const options = {
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  accessKeyId: process.env.ACCESS_KEY,
+  secretAccessKey: process.env.SECRET_ACCESS_KEY,
   region: 'ap-southeast-2'
 };
 
