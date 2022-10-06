@@ -37,5 +37,7 @@ const PaymentSchema = new dynamoose.Schema(
 
 export const PaymentModel = () => {
   databaseService();
-  return dynamoose.model(TABLE, PaymentSchema);
+  const Model = dynamoose.model(TABLE, PaymentSchema);
+  new dynamoose.Table(TABLE, [Model], { create: false, waitForActive: false });
+  return Model;
 };
