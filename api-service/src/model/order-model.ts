@@ -39,9 +39,9 @@ const OrderSchema = new dynamoose.Schema(
 );
 
 export const OrderModel = () => {
-  databaseService();
   console.log('Will save in the order table. tablename:', TABLE);
   const Model = dynamoose.model(TABLE, OrderSchema);
-  new dynamoose.Table(TABLE, [Model], { create: false, waitForActive: false });
+  databaseService(TABLE, [Model]);
+  // new dynamoose.Table(TABLE, [Model], { create: false, waitForActive: false });
   return Model;
 };
