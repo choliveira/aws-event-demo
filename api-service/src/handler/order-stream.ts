@@ -6,7 +6,7 @@ export const handler = async (event: any): Promise<any> => {
 
     const records = event.Records;
     records.forEach((stream: any) => {
-      if (stream.dynamodb.eventName !== 'INSERT') {
+      if (stream.eventName !== 'INSERT') {
         return;
       }
 
