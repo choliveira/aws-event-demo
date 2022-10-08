@@ -1,4 +1,8 @@
-import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
+import {
+  SendMessageCommand,
+  SendMessageCommandOutput,
+  SQSClient
+} from '@aws-sdk/client-sqs';
 
 export interface SqsParameters {
   source: string;
@@ -18,10 +22,12 @@ export class SqsService {
   /**
    * sendSqsMessage
    */
-  public async sendSqsMessage(data: SqsParameters) {
+  public async sendSqsMessage(
+    data: SqsParameters
+  ): Promise<SendMessageCommandOutput> {
     const { source, title, payload, queueUrl } = data;
     const params = {
-      DelaySeconds: 10,
+      DelaySeconds: 60,
       MessageAttributes: {
         Title: {
           DataType: 'String',
@@ -44,14 +50,19 @@ export class SqsService {
     try {
       console.log('Will send message to sqs...', params);
       const data = await this.sqsClient.send(new SendMessageCommand(params));
+      if (!data) {
+        console.log('Did not get response from sending sqs message.');
+      }
       console.log('Success, message sent. MessageID:', data.MessageId);
-    } catch (err) {
+      return data;
+    } catch (err: any) {
       console.error(
         'Failed to send message to the queue',
         err,
         'check payload',
         data
       );
+      throw new Error(err);
     }
   }
 }
