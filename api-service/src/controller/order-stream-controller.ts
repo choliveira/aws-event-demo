@@ -12,7 +12,7 @@ export class OrderStreamController {
       order
     );
     const params: SqsParameters = {
-      payload: order,
+      payload: JSON.stringify(order),
       source: 'order-stream-service',
       title: 'Order created',
       queueUrl:
