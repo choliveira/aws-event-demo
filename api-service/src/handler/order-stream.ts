@@ -7,7 +7,7 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
   try {
     const orderStreamController = new OrderStreamController();
     console.log('order-stream handler', JSON.stringify(event));
-    run();
+    await run();
     console.log('Response from sending message to sqs in th handler');
     const records = event.Records;
     // records.forEach(async (stream: any) => {
@@ -66,7 +66,7 @@ const params = {
 const run = async () => {
   try {
     console.log('Will send message to SQS...', params);
-    const data = await sqsClient.send(new SendMessageCommand(params));
+    const data = await sqsClient.send(new SendMessageCommand(params)).promise();
     console.log('Success, message sent. MessageID:', data.MessageId);
     return data; // For unit tests.
   } catch (err) {
