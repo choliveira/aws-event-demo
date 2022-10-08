@@ -1,7 +1,10 @@
 import { unmarshall } from '@aws-sdk/util-dynamodb';
+import { DynamoDBStreamEvent } from 'aws-lambda';
+import { OrderStreamController } from '../controller/order-stream-controller';
 
-export const handler = async (event: any): Promise<any> => {
+export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
   try {
+    const orderStreamController = new OrderStreamController();
     console.log('order-stream handler', JSON.stringify(event));
 
     const records = event.Records;
@@ -12,20 +15,15 @@ export const handler = async (event: any): Promise<any> => {
 
       const order = unmarshall(stream.dynamodb.NewImage);
       console.log('order unmarshalled', JSON.stringify(order));
-      /** TODO:
-       * 1 - Produce a message to SQS
-       * 2 - Publish a message to an SNS Topic
-       * 3 - Send a message to an Event Bus (EventBridge)
-       * */
 
       //1 - Produce a message to SQS
-      sqsProducer(order);
+      orderStreamController.sqsProducer(order);
 
       // 2 - Publish a message to an SNS Topic
-      snsPublisher(order);
+      orderStreamController.snsPublisher(order);
 
       // 3 - Send a message to an Event Bus (EventBridge)
-      eventBusPublisher(order);
+      orderStreamController.eventBusPublisher(order);
     });
   } catch (error: any) {
     console.log('Error found in the order-stream handler', JSON.parse(error));
@@ -34,25 +32,4 @@ export const handler = async (event: any): Promise<any> => {
       body: JSON.stringify(error)
     };
   }
-};
-
-const sqsProducer = (data: any) => {
-  console.log(
-    'Im the sqsProducer and I will send this data as a message payload to SQS.',
-    data
-  );
-};
-
-const snsPublisher = (data: any) => {
-  console.log(
-    'Im the snsPublisher and I will send this data as a message payload to an SNS Topic.',
-    data
-  );
-};
-
-const eventBusPublisher = (data: any) => {
-  console.log(
-    'Im the eventBusPublisher and I will send this data as a message payload to an SNS Topic.',
-    data
-  );
 };
