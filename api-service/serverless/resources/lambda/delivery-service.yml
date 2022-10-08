@@ -1,0 +1,8 @@
+delivery-service:
+  environment:
+    ORDER_TABLE: ${self:custom.orderTable.name}
+  handler: src/handler/delivery-service.handler
+  events:
+    - sqs:
+        arn: 'arn:aws:sqs:ap-southeast-2:587919987702:process-order-created'
+        batchSize: 5

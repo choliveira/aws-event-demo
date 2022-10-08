@@ -31,6 +31,7 @@ functions:
   - ${file(serverless/resources/lambda/post-payment.yml)}
   - ${file(serverless/resources/lambda/post-order.yml)}
   - ${file(serverless/resources/lambda/order-stream.yml)}
+  - ${file(serverless/resources/lambda/delivery-service.yml)}
 
 resources:
   Resources:
