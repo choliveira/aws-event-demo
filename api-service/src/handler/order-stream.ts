@@ -1,6 +1,6 @@
 import { SendMessageCommand } from '@aws-sdk/client-sqs';
-import { unmarshall } from '@aws-sdk/util-dynamodb';
 import { DynamoDBStreamEvent } from 'aws-lambda';
+import { DynamoDB } from 'aws-sdk';
 import { sqsClient } from '../utils/sqs';
 
 export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
@@ -15,7 +15,7 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
         return;
       }
 
-      const order = unmarshall(stream.dynamodb.NewImage);
+      const order = DynamoDB.Converter.unmarshall(stream.dynamodb.NewImage);
       console.log('order unmarshalled', JSON.stringify(order));
 
       //1 - Produce a message to SQS
