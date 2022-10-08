@@ -1,3 +1,4 @@
+import { SendMessageCommandOutput } from '@aws-sdk/client-sqs';
 import { SqsParameters, SqsService } from '../aws-services/sqs-service';
 
 export class OrderStreamController {
@@ -6,13 +7,13 @@ export class OrderStreamController {
   /**
    * sqsProducer
    */
-  public async sqsProducer(order: any) {
+  public async sqsProducer(order: any): Promise<SendMessageCommandOutput> {
     console.log(
       'Im the sqsProducer and I will send this data as a message payload to SQS.',
       order
     );
     const params: SqsParameters = {
-      payload: JSON.stringify(order),
+      payload: JSON.stringify({ order: order.id }),
       source: 'order-stream-service',
       title: 'Order created',
       queueUrl:
@@ -21,8 +22,9 @@ export class OrderStreamController {
     try {
       const sqs = new SqsService();
       return await sqs.sendSqsMessage(params);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error happened on order-stream-controller', err);
+      throw new Error(err);
     }
   }
 
