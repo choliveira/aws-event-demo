@@ -12,7 +12,18 @@ const OrderSchema = new dynamoose.Schema(
       type: String,
       default: uuidv4()
     },
-    productId: String,
+    products: {
+      type: Array,
+      schema: [
+        {
+          type: Object,
+          schema: {
+            id: String,
+            quantity: Number
+          }
+        }
+      ]
+    },
     customer: {
       type: Object,
       schema: {
@@ -42,6 +53,5 @@ export const OrderModel = () => {
   console.log('Will save in the order table. tablename:', TABLE);
   const Model = dynamoose.model(TABLE, OrderSchema);
   databaseService(TABLE, [Model]);
-  // new dynamoose.Table(TABLE, [Model], { create: false, waitForActive: false });
   return Model;
 };
