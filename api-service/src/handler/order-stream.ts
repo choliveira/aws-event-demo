@@ -8,7 +8,7 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
     console.log('order-stream handler', JSON.stringify(event));
 
     const records = event.Records;
-    records.forEach((stream: any) => {
+    records.forEach(async (stream: any) => {
       if (stream.eventName !== 'INSERT') {
         return;
       }
@@ -17,7 +17,11 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
       console.log('order unmarshalled', JSON.stringify(order));
 
       //1 - Produce a message to SQS
-      orderStreamController.sqsProducer(order);
+      const controller = await orderStreamController.sqsProducer(order);
+      console.log(
+        'Response from sending message to sqs in th handler',
+        JSON.stringify(controller)
+      );
 
       // 2 - Publish a message to an SNS Topic
       orderStreamController.snsPublisher(order);
