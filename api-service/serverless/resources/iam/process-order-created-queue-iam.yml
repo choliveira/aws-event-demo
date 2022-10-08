@@ -1,10 +1,9 @@
 process-order-created-queue-iam:
-  - Effect: 'Allow'
-    Action:
-      - 'sqs:SendMessage'
-      - 'sqs:GetQueueUrl'
-    Resource: 'arn:aws:sqs:${self:custom.region}:${self:custom.account}:process-order-created'
-  - Effect: 'Allow'
-    Action:
-      - 'sqs:ListQueues'
-    Resource: 'arn:aws:sqs:${self:custom.region}:${self:custom.account}:*'
+  Effect: 'Allow'
+  Action:
+    - 'sqs:SendMessage'
+    - 'sqs:GetQueueUrl'
+    - 'sqs:ListQueues'
+  Resource:
+    - 'arn:aws:sqs:${self:custom.region}:${self:custom.account}:process-order-created'
+    - 'arn:aws:sqs:${self:custom.region}:${self:custom.account}:*'
