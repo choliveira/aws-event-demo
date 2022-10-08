@@ -66,7 +66,7 @@ const params = {
 const run = async () => {
   try {
     console.log('Will send message to SQS...', params);
-    const data = await sqsClient.send(new SendMessageCommand(params)).promise();
+    const data = await sqsClient.send(new SendMessageCommand(params));
     console.log('Success, message sent. MessageID:', data.MessageId);
     return data; // For unit tests.
   } catch (err) {
