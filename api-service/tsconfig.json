@@ -29,11 +29,5 @@
     "rootDir": "./"
   },
   "include": ["./src/", "./**/*.ts"],
-  "exclude": [
-    "e2e/",
-    "test/",
-    "scripts/",
-    "node_modules/**/*",
-    ".vscode/**/*"
-  ]
+  "exclude": ["e2e/", "test/", "scripts/", "node_modules/**/*", ".vscode/**/*"]
 }
