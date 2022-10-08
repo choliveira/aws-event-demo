@@ -13,11 +13,10 @@ export interface SqsParameters {
 }
 
 export class SqsService {
-  private region: string = 'ap-southeast-2';
   private sqsClient: SQSClient;
 
   constructor() {
-    this.sqsClient = new SQSClient({ region: this.region });
+    this.sqsClient = new SQSClient({ region: 'ap-southeast-2' });
   }
 
   /**
