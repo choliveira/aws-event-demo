@@ -1,9 +1,0 @@
-order-stream-iam: #remove this file, it is not needed.
-  Effect: Allow
-  Action:
-    - dynamodb:DescribeStream
-    - dynamodb:GetRecords
-    - dynamodb:GetShardIterator
-    - dynamodb:ListStreams
-  Resource:
-    - ${self:custom.orderTable.arn}
