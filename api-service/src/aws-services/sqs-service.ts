@@ -1,9 +1,10 @@
 import {
   SendMessageCommand,
   SendMessageCommandOutput,
-  SetQueueAttributesCommand
+  SetQueueAttributesCommand,
+  SQSClient
 } from '@aws-sdk/client-sqs';
-import { sqsClient } from '../utils/sqs';
+// import { sqsClient } from '../utils/sqs';
 
 export interface SqsParameters {
   source: string;
@@ -13,10 +14,10 @@ export interface SqsParameters {
 }
 
 export class SqsService {
-  // private sqsClient: SQSClient;
+  private sqsClient: SQSClient;
 
   constructor() {
-    // this.sqsClient = new SQSClient({ region: 'ap-southeast-2' });
+    this.sqsClient = new SQSClient({ region: 'ap-southeast-2' });
   }
 
   /**
@@ -43,14 +44,12 @@ export class SqsService {
         }
       },
       MessageBody: payload,
-      // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
-      // MessageGroupId: "Group1",  // Required for FIFO queues
       QueueUrl: queueUrl
     };
     try {
       await this.redriveDLQ();
       console.log('Will send message to sqs...', params);
-      const data = await sqsClient.send(new SendMessageCommand(params));
+      const data = await this.sqsClient.send(new SendMessageCommand(params));
       if (!data) {
         console.log('Did not get response from sending sqs message.');
       }
@@ -79,7 +78,9 @@ export class SqsService {
     };
     try {
       console.log('Will set attributes to redriveDLQ');
-      const data = await sqsClient.send(new SetQueueAttributesCommand(params));
+      const data = await this.sqsClient.send(
+        new SetQueueAttributesCommand(params)
+      );
       console.log('redriveDLQ Success', data);
     } catch (err: any) {
       console.log('Error in the method redriveDLQ', err);
