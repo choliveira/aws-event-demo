@@ -1,17 +1,47 @@
 import { SendMessageCommand } from '@aws-sdk/client-sqs';
 import { DynamoDBStreamEvent } from 'aws-lambda';
+import { SqsParameters, SqsService } from '../aws-services/sqs-service';
 import { sqsClient } from '../utils/sqs';
 
 export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
   try {
     // const orderStreamController = new OrderStreamController();
     console.log('order-stream handler', JSON.stringify(event));
-    await run(
-      JSON.stringify({
-        order: '2c417843-f362-50ef-883c-23fe3ec91e9a',
-        product: [{ id: 1, quantity: 5 }]
-      })
-    );
+    // await run(
+    //   JSON.stringify({
+    //     order: '2c417843-f362-50ef-883c-23fe3ec91e9a',
+    //     product: [{ id: 1, quantity: 5 }]
+    //   })
+    // );
+    const params: SqsParameters = {
+      payload: JSON.stringify({
+        products: [
+          {
+            id: '1',
+            quantity: 1
+          }
+        ],
+        customer: {
+          email: 'carlos@mail.com.au',
+          phone: '+610450441502'
+        },
+        delivery: {
+          type: 'standard',
+          address: '41/7 Chelmsford rd. Mango Hill, QLD 4509'
+        },
+        paymentId: '1',
+        amountPaid: 559,
+        createdAt: 1665388257641,
+        updatedAt: 1665388257641,
+        id: '19bcc4b2-982f-47ca-9751-49fc7719e748'
+      }),
+      source: 'order-stream-service',
+      title: 'Order created',
+      queueUrl:
+        'https://sqs.ap-southeast-2.amazonaws.com/587919987702/process-order-created'
+    };
+    const sqs = new SqsService();
+    await sqs.sendSqsMessage(params);
     console.log('Response from sending message to sqs in th handler');
     // const records = event.Records;
     // records.forEach(async (stream: any) => {
