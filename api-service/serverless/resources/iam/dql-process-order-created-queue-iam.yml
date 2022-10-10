@@ -4,6 +4,8 @@ dql-process-order-created-queue-iam:
     - 'sqs:SendMessage'
     - 'sqs:GetQueueUrl'
     - 'sqs:ListQueues'
+    - 'sqs:ReceiveMessage'
+    - 'sqs:DeleteMessage'
+    - 'sqs:GetQueueAttributes'
   Resource:
     - 'arn:aws:sqs:${self:custom.region}:${self:custom.account}:dlq-process-order-created'
-    - 'arn:aws:sqs:${self:custom.region}:${self:custom.account}:*'

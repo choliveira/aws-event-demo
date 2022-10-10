@@ -25,7 +25,7 @@ export class SqsService {
    */
   public async sendSqsMessage(
     data: SqsParameters
-  ): Promise<SendMessageCommandOutput> {
+  ): Promise<SendMessageCommandOutput | void> {
     const { source, title, payload, queueUrl } = data;
     const params = {
       DelaySeconds: 10,
@@ -56,13 +56,12 @@ export class SqsService {
       console.log('Success, message sent. MessageID:', data.MessageId);
       return data;
     } catch (err: any) {
-      console.log(
+      console.error(
         'Failed to send message to the queue',
         err,
         'check payload',
         data
       );
-      throw new Error(err);
     }
   }
 

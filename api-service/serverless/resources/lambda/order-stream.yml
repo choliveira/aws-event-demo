@@ -3,6 +3,9 @@ order-stream:
     ORDER_TABLE: ${self:custom.orderTable.name}
   handler: src/handler/order-stream.handler
   events:
+    # - http:
+    #     method: post
+    #     path: /stream
     - stream:
         type: dynamodb
         batchSize: 3

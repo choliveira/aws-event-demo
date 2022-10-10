@@ -1,4 +1,5 @@
-import { SendMessageCommandOutput } from '@aws-sdk/client-sqs';
+import { DynamoDBRecord } from 'aws-lambda';
+import { DynamoDB } from 'aws-sdk';
 import { SqsParameters, SqsService } from '../aws-services/sqs-service';
 
 export class OrderStreamController {
@@ -7,23 +8,27 @@ export class OrderStreamController {
   /**
    * sqsProducer
    */
-  public async sqsProducer(order: any): Promise<SendMessageCommandOutput> {
+  public async sqsProducer(records: DynamoDBRecord[]): Promise<void> {
     console.log(
       'Im the sqsProducer and I will send this data as a message payload to SQS.',
-      order
+      JSON.stringify(records)
     );
-    const params: SqsParameters = {
-      payload: JSON.stringify(order),
-      source: 'order-stream-service',
-      title: 'Order created',
-      queueUrl:
-        'https://sqs.ap-southeast-2.amazonaws.com/587919987702/process-order-created'
-    };
+
     try {
+      const orders = records.map((r: DynamoDBRecord): any => {
+        if (r.eventName === 'INSERT' && r.dynamodb && r.dynamodb.NewImage) {
+          return DynamoDB.Converter.unmarshall(r.dynamodb.NewImage);
+        }
+      });
+
       const sqs = new SqsService();
-      return await sqs.sendSqsMessage(params);
+      const data: SqsParameters = this.setSqsMessageParameters(orders[0]);
+      await sqs.sendSqsMessage(data);
     } catch (err: any) {
-      console.error('Error happened on order-stream-controller', err);
+      console.error(
+        'Error happened on order-stream-controller',
+        JSON.stringify(err)
+      );
       throw new Error(err);
     }
   }
@@ -40,5 +45,15 @@ export class OrderStreamController {
       'Im the eventBusPublisher and I will send this data as a message payload to an SNS Topic.',
       data
     );
+  }
+
+  private setSqsMessageParameters(data: any): SqsParameters {
+    return {
+      payload: JSON.stringify(data),
+      source: 'order-stream-service',
+      title: 'Order created',
+      queueUrl:
+        'https://sqs.ap-southeast-2.amazonaws.com/587919987702/process-order-created'
+    };
   }
 }
