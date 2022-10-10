@@ -26,6 +26,7 @@ provider:
     - ${file(serverless/resources/iam/payment-table-iam.yml):payment-table-iam}
     - ${file(serverless/resources/iam/order-table-iam.yml):order-table-iam}
     - ${file(serverless/resources/iam/process-order-created-queue-iam.yml):process-order-created-queue-iam}
+    - ${file(serverless/resources/iam/dql-process-order-created-queue-iam.yml):dql-process-order-created-queue-iam}
 
 functions:
   - ${file(serverless/resources/lambda/post-payment.yml)}
