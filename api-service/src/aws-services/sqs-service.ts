@@ -47,7 +47,7 @@ export class SqsService {
       QueueUrl: queueUrl
     };
     try {
-      await this.redriveDLQ();
+      // await this.redriveDLQ();
       console.log('Will send message to sqs...', params);
       const data = await this.sqsClient.send(new SendMessageCommand(params));
       if (!data) {
