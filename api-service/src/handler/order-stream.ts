@@ -24,6 +24,8 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
       //   'Response from sending message to sqs in th handler',
       //   controller
       // );
+
+      //TODO: continue from here... the issue is not with the unmarshall
       await run(JSON.stringify(order));
       console.log('Response from sending message to sqs in th handler');
 
@@ -59,7 +61,7 @@ const run = async (data: string) => {
         StringValue: '6'
       }
     },
-    MessageBody: data,
+    MessageBody: 'The is a static content message payload',
     // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
     // MessageGroupId: "Group1",  // Required for FIFO queues
     QueueUrl:
