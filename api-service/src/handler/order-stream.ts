@@ -6,7 +6,12 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
   try {
     // const orderStreamController = new OrderStreamController();
     console.log('order-stream handler', JSON.stringify(event));
-    await run('');
+    await run(
+      JSON.stringify({
+        order: '2c417843-f362-50ef-883c-23fe3ec91e9a',
+        product: [{ id: 1, quantity: 5 }]
+      })
+    );
     console.log('Response from sending message to sqs in th handler');
     // const records = event.Records;
     // records.forEach(async (stream: any) => {
@@ -61,7 +66,7 @@ const run = async (data: string) => {
         StringValue: '6'
       }
     },
-    MessageBody: 'The is a static content message payload',
+    MessageBody: data,
     // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
     // MessageGroupId: "Group1",  // Required for FIFO queues
     QueueUrl:
