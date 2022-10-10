@@ -14,7 +14,7 @@ export class OrderStreamController {
    */
   public async sqsProducer(records: DynamoDBRecord[]): Promise<void> {
     console.log(
-      'Im the sqsProducer and I will send this data as a message payload to SQS.',
+      'Im the sqsProducer and this is what I received from Order table stream.',
       JSON.stringify(records)
     );
 
@@ -32,8 +32,6 @@ export class OrderStreamController {
         }
       );
 
-      console.log('---------------messages-----------------------', messages);
-
       if (messages.length > 0) {
         const batch = {
           QueueUrl:
@@ -41,7 +39,6 @@ export class OrderStreamController {
           Entries: messages
         };
         await this.sqs.sendBatchSqsMessage(batch);
-        console.log('========== batch worked from controller ============');
       }
     } catch (err: any) {
       console.error(
@@ -64,24 +61,4 @@ export class OrderStreamController {
       data
     );
   }
-
-  // private setSqsMessageBatchParams(orders: any): SendMessageBatchRequest {
-  //   const messages: SendMessageBatchRequestEntry[] = orders.map(
-  //     (order: any) => {
-  //       return this.sqs.setBatchMessagesAtt({
-  //         payload: JSON.stringify(order),
-  //         source: 'order-stream-service',
-  //         title: 'Order created'
-  //       });
-  //     }
-  //   );
-
-  //   console.log('---------------messages-----------------------', messages);
-
-  //   return {
-  //     QueueUrl:
-  //       'https://sqs.ap-southeast-2.amazonaws.com/587919987702/process-order-created',
-  //     Entries: messages
-  //   };
-  // }
 }

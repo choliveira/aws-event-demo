@@ -2,7 +2,6 @@ import {
   SendMessageBatchCommand,
   SendMessageBatchCommandInput,
   SendMessageBatchRequestEntry,
-  SendMessageCommand,
   SetQueueAttributesCommand,
   SQSClient
 } from '@aws-sdk/client-sqs';
@@ -37,15 +36,9 @@ export class SqsService {
   public async sendBatchSqsMessage(
     input: SendMessageBatchCommandInput
   ): Promise<void> {
-    console.log(
-      '========== sendBatchSqsMessage INPUT ============',
-      JSON.stringify(input)
-    );
+    console.log('sendBatchSqsMessage input', JSON.stringify(input));
     try {
-      const data = await this.sqsClient.send(
-        new SendMessageBatchCommand(input)
-      );
-      console.log('========== batch sent ============', JSON.stringify(data));
+      await this.sqsClient.send(new SendMessageBatchCommand(input));
     } catch (err) {
       console.error(
         'Failed to send batch message to the queue',
@@ -58,6 +51,8 @@ export class SqsService {
 
   /**
    * setBatchMessagesAtt
+   * @param data SqsParameters
+   * @returns SendMessageBatchRequestEntry
    */
   public setBatchMessagesAtt(
     data: SqsParameters
@@ -85,49 +80,9 @@ export class SqsService {
   }
 
   /**
-   * sendSqsMessage
+   * @todo: Not implement
+   * redriveDLQ
    */
-  public async sendSqsMessage(data: SqsParameters): Promise<void> {
-    const { source, title, payload, queueUrl } = data;
-    const params = {
-      DelaySeconds: 10,
-      MessageAttributes: {
-        Title: {
-          DataType: 'String',
-          StringValue: title
-        },
-        Author: {
-          DataType: 'String',
-          StringValue: source
-        },
-        WeeksOn: {
-          DataType: 'Number',
-          StringValue: '6'
-        }
-      },
-      MessageBody: payload,
-      QueueUrl: queueUrl
-    };
-    try {
-      // await this.redriveDLQ();
-      console.log('Will send message to sqs...', params);
-      await this.sqsClient.send(new SendMessageCommand(params));
-
-      // if (!data) {
-      //   console.log('Did not get response from sending sqs message.');
-      // }
-      // console.log('Success, message sent. MessageID:', data.MessageId);
-      // return data;
-    } catch (err: any) {
-      console.error(
-        'Failed to send message to the queue',
-        err,
-        'check payload',
-        data
-      );
-    }
-  }
-
   private async redriveDLQ(): Promise<void> {
     const params = {
       Attributes: {
