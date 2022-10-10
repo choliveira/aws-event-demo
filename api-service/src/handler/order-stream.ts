@@ -1,15 +1,19 @@
-// import { DynamoDBStreamEvent } from 'aws-lambda';
+import { DynamoDBStreamEvent } from 'aws-lambda';
 import { OrderStreamController } from '../controller/order-stream-controller';
 
-export const handler = async (event: any): Promise<any> => {
+export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
   try {
     console.log('Starting order-stream handler');
-    //TODO: fix this before commit
-    // const body = JSON.parse(event.body!);
-    // const records = body.Records;
+    /** Use this to run it locally
+     *  const body = JSON.parse(event.body!);
+     *  const records = body.Records;
+     */
     const records = event.Records;
     const orderStreamController = new OrderStreamController();
+
+    //1 - Produce a message to an SQS Queue
     await orderStreamController.sqsProducer(records);
+
     // 2 - Publish a message to an SNS Topic
     // orderStreamController.snsPublisher(order);
 

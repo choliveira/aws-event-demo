@@ -1,9 +1,13 @@
+import { SendMessageBatchRequestEntry } from '@aws-sdk/client-sqs';
 import { DynamoDBRecord } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
-import { SqsParameters, SqsService } from '../aws-services/sqs-service';
+import { SqsService } from '../aws-services/sqs-service';
 
 export class OrderStreamController {
-  constructor() {}
+  private sqs: SqsService;
+  constructor() {
+    this.sqs = new SqsService();
+  }
 
   /**
    * sqsProducer
@@ -15,25 +19,35 @@ export class OrderStreamController {
     );
 
     try {
-      const orders = records.map((r: DynamoDBRecord): any => {
-        if (r.eventName === 'INSERT' && r.dynamodb && r.dynamodb.NewImage) {
-          return DynamoDB.Converter.unmarshall(r.dynamodb.NewImage);
+      const messages: SendMessageBatchRequestEntry[] = records.map(
+        (r: DynamoDBRecord): any => {
+          if (r.eventName === 'INSERT' && r.dynamodb && r.dynamodb.NewImage) {
+            const order = DynamoDB.Converter.unmarshall(r.dynamodb.NewImage);
+            return this.sqs.setBatchMessagesAtt({
+              payload: JSON.stringify(order),
+              source: 'order-stream-service',
+              title: 'Order created'
+            });
+          }
         }
-      });
+      );
 
-      const sqs = new SqsService();
-      if (orders.length > 0) {
-        orders.forEach((order) => {
-          const data: SqsParameters = this.setSqsMessageParameters(order);
-          sqs.sendSqsMessage(data);
-        });
+      console.log('---------------messages-----------------------', messages);
+
+      if (messages.length > 0) {
+        const batch = {
+          QueueUrl:
+            'https://sqs.ap-southeast-2.amazonaws.com/587919987702/process-order-created',
+          Entries: messages
+        };
+        await this.sqs.sendBatchSqsMessage(batch);
+        console.log('========== batch worked from controller ============');
       }
     } catch (err: any) {
       console.error(
         'Error happened on order-stream-controller',
         JSON.stringify(err)
       );
-      throw new Error(err);
     }
   }
 
@@ -51,13 +65,23 @@ export class OrderStreamController {
     );
   }
 
-  private setSqsMessageParameters(data: any): SqsParameters {
-    return {
-      payload: JSON.stringify(data),
-      source: 'order-stream-service',
-      title: 'Order created',
-      queueUrl:
-        'https://sqs.ap-southeast-2.amazonaws.com/587919987702/process-order-created'
-    };
-  }
+  // private setSqsMessageBatchParams(orders: any): SendMessageBatchRequest {
+  //   const messages: SendMessageBatchRequestEntry[] = orders.map(
+  //     (order: any) => {
+  //       return this.sqs.setBatchMessagesAtt({
+  //         payload: JSON.stringify(order),
+  //         source: 'order-stream-service',
+  //         title: 'Order created'
+  //       });
+  //     }
+  //   );
+
+  //   console.log('---------------messages-----------------------', messages);
+
+  //   return {
+  //     QueueUrl:
+  //       'https://sqs.ap-southeast-2.amazonaws.com/587919987702/process-order-created',
+  //     Entries: messages
+  //   };
+  // }
 }

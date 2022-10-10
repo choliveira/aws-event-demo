@@ -1,22 +1,87 @@
 import {
+  SendMessageBatchCommand,
+  SendMessageBatchCommandInput,
+  SendMessageBatchRequestEntry,
   SendMessageCommand,
   SetQueueAttributesCommand,
   SQSClient
 } from '@aws-sdk/client-sqs';
+import { v4 as uuidv4 } from 'uuid';
 // import { sqsClient } from '../utils/sqs';
 
 export interface SqsParameters {
   source: string;
   payload: string;
   title: string;
-  queueUrl: string;
+  queueUrl?: string;
 }
 
 export class SqsService {
   private sqsClient: SQSClient;
 
   constructor() {
-    this.sqsClient = new SQSClient({ region: 'ap-southeast-2' });
+    this.sqsClient = new SQSClient({
+      credentials: {
+        accessKeyId: process.env.ACCESS_KEY!,
+        secretAccessKey: process.env.SECRET_ACCESS_KEY!
+      },
+      region: 'ap-southeast-2'
+    });
+  }
+
+  /**
+   * sendBatchSqsMessage - send batch of (10 by default) messages to a SQS queue
+   * @param input SendMessageBatchCommandInput
+   * @return Promise<void>
+   */
+  public async sendBatchSqsMessage(
+    input: SendMessageBatchCommandInput
+  ): Promise<void> {
+    console.log(
+      '========== sendBatchSqsMessage INPUT ============',
+      JSON.stringify(input)
+    );
+    try {
+      const data = await this.sqsClient.send(
+        new SendMessageBatchCommand(input)
+      );
+      console.log('========== batch sent ============', JSON.stringify(data));
+    } catch (err) {
+      console.error(
+        'Failed to send batch message to the queue',
+        err,
+        'check payload',
+        input
+      );
+    }
+  }
+
+  /**
+   * setBatchMessagesAtt
+   */
+  public setBatchMessagesAtt(
+    data: SqsParameters
+  ): SendMessageBatchRequestEntry {
+    const { source, title, payload } = data;
+    return {
+      Id: uuidv4(),
+      DelaySeconds: 5,
+      MessageAttributes: {
+        Title: {
+          DataType: 'String',
+          StringValue: title
+        },
+        Author: {
+          DataType: 'String',
+          StringValue: source
+        },
+        WeeksOn: {
+          DataType: 'Number',
+          StringValue: '6'
+        }
+      },
+      MessageBody: payload
+    };
   }
 
   /**
@@ -47,6 +112,7 @@ export class SqsService {
       // await this.redriveDLQ();
       console.log('Will send message to sqs...', params);
       await this.sqsClient.send(new SendMessageCommand(params));
+
       // if (!data) {
       //   console.log('Did not get response from sending sqs message.');
       // }
