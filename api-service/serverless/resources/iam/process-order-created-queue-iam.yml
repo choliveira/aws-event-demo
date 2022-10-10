@@ -6,5 +6,4 @@ process-order-created-queue-iam:
     - 'sqs:ListQueues'
   Resource:
     - 'arn:aws:sqs:${self:custom.region}:${self:custom.account}:process-order-created'
-    - 'arn:aws:sqs:${self:custom.region}:${self:custom.account}:dlq-process-order-created'
     - 'arn:aws:sqs:${self:custom.region}:${self:custom.account}:*'
