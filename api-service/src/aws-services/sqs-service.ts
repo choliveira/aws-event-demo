@@ -1,6 +1,5 @@
 import {
   SendMessageCommand,
-  SendMessageCommandOutput,
   SetQueueAttributesCommand,
   SQSClient
 } from '@aws-sdk/client-sqs';
@@ -23,9 +22,7 @@ export class SqsService {
   /**
    * sendSqsMessage
    */
-  public async sendSqsMessage(
-    data: SqsParameters
-  ): Promise<SendMessageCommandOutput | void> {
+  public async sendSqsMessage(data: SqsParameters): Promise<void> {
     const { source, title, payload, queueUrl } = data;
     const params = {
       DelaySeconds: 10,
@@ -49,12 +46,12 @@ export class SqsService {
     try {
       // await this.redriveDLQ();
       console.log('Will send message to sqs...', params);
-      const data = await this.sqsClient.send(new SendMessageCommand(params));
-      if (!data) {
-        console.log('Did not get response from sending sqs message.');
-      }
-      console.log('Success, message sent. MessageID:', data.MessageId);
-      return data;
+      await this.sqsClient.send(new SendMessageCommand(params));
+      // if (!data) {
+      //   console.log('Did not get response from sending sqs message.');
+      // }
+      // console.log('Success, message sent. MessageID:', data.MessageId);
+      // return data;
     } catch (err: any) {
       console.error(
         'Failed to send message to the queue',

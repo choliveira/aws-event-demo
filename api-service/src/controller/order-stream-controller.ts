@@ -22,8 +22,12 @@ export class OrderStreamController {
       });
 
       const sqs = new SqsService();
-      const data: SqsParameters = this.setSqsMessageParameters(orders[0]);
-      await sqs.sendSqsMessage(data);
+      if (orders.length > 0) {
+        orders.forEach((order) => {
+          const data: SqsParameters = this.setSqsMessageParameters(order);
+          sqs.sendSqsMessage(data);
+        });
+      }
     } catch (err: any) {
       console.error(
         'Error happened on order-stream-controller',
