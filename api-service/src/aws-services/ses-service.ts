@@ -25,7 +25,7 @@ export class SesService {
   public async sendEmail(emailData: IEmailData) {
     const emailCommand = this.SetEmailCommand(emailData);
     try {
-      console.log('ses-service will send email', emailCommand);
+      console.log('ses-service will send email', JSON.stringify(emailCommand));
       return await this.sesClient.send(emailCommand);
     } catch (e) {
       console.error('Failed to send email.', e, 'Email data:', emailCommand);
