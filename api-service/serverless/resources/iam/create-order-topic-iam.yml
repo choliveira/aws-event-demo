@@ -1,0 +1,6 @@
+create-order-topic-iam:
+  Effect: 'Allow'
+  Action:
+    - 'sns:Publish'
+  Resource:
+    - 'arn:aws:sns:${self:custom.region}:${self:custom.account}:order-created'
