@@ -9,8 +9,9 @@ export const deliveryController = async (
 ): Promise<void> => {
   try {
     const emailService = new SesService(sender);
-    let orders: any[] = records.map((r: SQSRecord) => {
-      return (orders.push = JSON.parse(r.body));
+    console.log('delivery controller', records);
+    const orders: any[] = records.map((r: SQSRecord) => {
+      return JSON.parse(r.body);
     });
 
     if (orders.length <= 0) {
@@ -20,7 +21,7 @@ export const deliveryController = async (
     /**
      * TODO: This is a hack for the demo to just get the first order coming from the event and send one email,
      * otherwise we need to refactor ses-service to send bulk email
-     * */
+     **/
     const order = orders[0];
 
     console.log(
