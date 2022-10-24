@@ -1,0 +1,6 @@
+customer-service:
+  handler: src/handler/customer-service.handler
+  events:
+    - sns:
+        arn: 'arn:aws:sns:${self:custom.region}:${self:custom.account}:order-created'
+        batchSize: 5
