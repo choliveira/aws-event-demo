@@ -6,7 +6,6 @@ import {
   SQSClient
 } from '@aws-sdk/client-sqs';
 import { v4 as uuidv4 } from 'uuid';
-// import { sqsClient } from '../utils/sqs';
 
 export interface SqsParameters {
   source: string;
@@ -80,8 +79,8 @@ export class SqsService {
   }
 
   /**
-   * @todo: Not implement
-   * redriveDLQ
+   * @todo: Not implemented, do it if I have time
+   *
    */
   private async redriveDLQ(): Promise<void> {
     const params = {

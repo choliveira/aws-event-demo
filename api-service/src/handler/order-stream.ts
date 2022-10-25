@@ -15,7 +15,7 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
     await orderStreamController.sqsProducer(records);
 
     // 2 - Publish a message to an SNS Topic
-    // orderStreamController.snsPublisher(order);
+    await orderStreamController.snsPublisher(records);
 
     // 3 - Send a message to an Event Bus (EventBridge)
     // orderStreamController.eventBusPublisher(order);
