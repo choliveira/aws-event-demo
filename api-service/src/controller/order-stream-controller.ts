@@ -5,6 +5,7 @@ import {
 } from '@aws-sdk/client-sqs';
 import { DynamoDBRecord } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
+import { v4 as uuidv4 } from 'uuid';
 import { SnsService } from '../aws-services/sns-service';
 import { SqsService } from '../aws-services/sqs-service';
 
@@ -26,27 +27,6 @@ export class OrderStreamController {
     );
 
     try {
-      // const messages: SendMessageBatchRequestEntry[] = records.map(
-      //   (r: DynamoDBRecord): any => {
-      //     if (r.eventName === 'INSERT' && r.dynamodb && r.dynamodb.NewImage) {
-      //       const order = DynamoDB.Converter.unmarshall(r.dynamodb.NewImage);
-      //       return this.sqs.setBatchMessagesAtt({
-      //         payload: JSON.stringify(order),
-      //         source: 'order-stream-service',
-      //         title: 'Order created'
-      //       });
-      //     }
-      //   }
-      // );
-
-      // if (messages.length > 0) {
-      //   const batch = {
-      //     QueueUrl:
-      //       'https://sqs.ap-southeast-2.amazonaws.com/587919987702/process-order-created',
-      //     Entries: messages
-      //   };
-      //   await this.sqs.sendBatchSqsMessage(batch);
-      // }
       await this.setBatch(records, 'sqs');
     } catch (err: any) {
       console.error(
@@ -79,18 +59,17 @@ export class OrderStreamController {
   }
 
   private async setBatch(records: DynamoDBRecord[], action: string) {
-    const messages: SendMessageBatchRequestEntry[] = records.map(
-      (r: DynamoDBRecord): any => {
-        if (r.eventName === 'INSERT' && r.dynamodb && r.dynamodb.NewImage) {
-          const order = DynamoDB.Converter.unmarshall(r.dynamodb.NewImage);
-          return this.sqs.setBatchMessagesAtt({
-            payload: JSON.stringify(order),
-            source: 'order-stream-service',
-            title: 'Order created'
-          });
-        }
+    const messages: any[] = records.map((r: DynamoDBRecord): any => {
+      if (r.eventName === 'INSERT' && r.dynamodb && r.dynamodb.NewImage) {
+        return DynamoDB.Converter.unmarshall(r.dynamodb.NewImage);
+        //TODO: decouple this part from here, so that sns can work.
+        // return this.sqs.setBatchMessagesAtt({
+        //   payload: JSON.stringify(order),
+        //   source: 'order-stream-service',
+        //   title: 'Order created'
+        // });
       }
-    );
+    });
 
     if (messages.length > 0) {
       switch (action) {
@@ -116,29 +95,30 @@ export class OrderStreamController {
     }
   }
 
-  private setSqsParams(
-    messages: SendMessageBatchRequestEntry[]
-  ): SendMessageBatchCommandInput {
+  private setSqsParams(messages: any[]): SendMessageBatchCommandInput {
+    const entries: SendMessageBatchRequestEntry[] = messages.map((order) => {
+      return this.sqs.setBatchMessagesAtt({
+        payload: JSON.stringify(order),
+        source: 'order-stream-service',
+        title: 'Order created'
+      });
+    });
     return {
       QueueUrl:
         'https://sqs.ap-southeast-2.amazonaws.com/587919987702/process-order-created',
-      Entries: messages
+      Entries: entries
     };
   }
 
-  private setSnsParams(
-    messages: SendMessageBatchRequestEntry[]
-  ): PublishBatchCommandInput {
+  private setSnsParams(messages: any[]): PublishBatchCommandInput {
     return {
       TopicArn: 'arn:aws:sns:ap-southeast-2:587919987702:order-created',
-      PublishBatchRequestEntries: messages.map(
-        (message: SendMessageBatchRequestEntry) => {
-          return {
-            Id: message.Id,
-            Message: message.MessageBody
-          };
-        }
-      )
+      PublishBatchRequestEntries: messages.map((order) => {
+        return {
+          Id: uuidv4(),
+          Message: JSON.stringify(order)
+        };
+      })
     };
   }
 }
