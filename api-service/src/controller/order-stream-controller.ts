@@ -63,34 +63,28 @@ export class OrderStreamController {
       'Im the eventBusPublisher and I will send this data as a message payload to an Event bus.',
       records
     );
-    //should refactor that
-    const messages: any[] = records.map((r: DynamoDBRecord): any => {
-      if (r.eventName === 'INSERT' && r.dynamodb && r.dynamodb.NewImage) {
-        return DynamoDB.Converter.unmarshall(r.dynamodb.NewImage);
-      }
-    });
-    if (messages.length === 0) return;
 
     const params: PutEventsCommandInput = {
-      Entries: messages.map((order) => {
-        return {
-          EventBusName: 'order-created-bus',
-          Detail: JSON.stringify(order),
-          DetailType: 'transaction',
-          Resources: [],
-          Source: 'orderCreated'
-        };
+      Entries: records.map((r: DynamoDBRecord): any => {
+        if (r.eventName === 'INSERT' && r.dynamodb && r.dynamodb.NewImage) {
+          const order = DynamoDB.Converter.unmarshall(r.dynamodb.NewImage);
+          return {
+            EventBusName: 'order-created-bus',
+            Detail: JSON.stringify(order),
+            DetailType: 'transaction',
+            Resources: [],
+            Source: 'orderCreated'
+          };
+        }
       })
-      // Entries: [
-      //   {
-      //     EventBusName: 'order-created-bus',
-      //     Detail: JSON.stringify({ key1: 'value1', key2: 'value2' }),
-      //     DetailType: 'transaction',
-      //     Resources: [],
-      //     Source: 'orderCreated'
-      //   }
-      // ]
     };
+    if (params.Entries?.length === 0) {
+      console.warn(
+        'No order to be sent at eventBusPublisher',
+        JSON.stringify(params)
+      );
+      return;
+    }
     try {
       await this.eb.publish(params);
       console.log(
@@ -105,6 +99,11 @@ export class OrderStreamController {
     }
   }
 
+  /**
+   * @todo refactor this method in here to be more similar to the eventBusPublisher
+   * @param records DynamoDBRecord[]
+   * @param action string
+   */
   private async setBatch(records: DynamoDBRecord[], action: string) {
     const messages: any[] = records.map((r: DynamoDBRecord): any => {
       if (r.eventName === 'INSERT' && r.dynamodb && r.dynamodb.NewImage) {
@@ -129,8 +128,6 @@ export class OrderStreamController {
             snsBatch
           );
           await this.sns.publish(snsBatch);
-          break;
-        case 'eb':
           break;
         default:
           break;
