@@ -1,0 +1,10 @@
+notification-service:
+  handler: src/handler/notification-service.handler
+  events:
+    - eventBridge:
+        eventBus: ${self:custom.orderCreatedEventBus}
+        pattern:
+          source:
+            - custom.orderCreated
+          detail-type:
+            - transaction

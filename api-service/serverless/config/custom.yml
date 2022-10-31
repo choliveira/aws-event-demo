@@ -3,6 +3,7 @@ defaultStage: local
 stage: ${opt:stage,self:custom.defaultStage}
 region: ${env:REGION, 'ap-southeast-2'}
 account: ${env:AWS_ACCOUNT, '587919987702'}
+orderCreatedEventBus: order-created-bus
 
 ### DynamoDB Tables ######
 paymentTable:
