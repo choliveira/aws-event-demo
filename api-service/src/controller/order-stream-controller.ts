@@ -1,4 +1,7 @@
-import { PutEventsCommandInput } from '@aws-sdk/client-eventbridge';
+import {
+  PutEventsCommandInput,
+  PutEventsRequestEntry
+} from '@aws-sdk/client-eventbridge';
 import { PublishBatchCommandInput } from '@aws-sdk/client-sns';
 import {
   SendMessageBatchCommandInput,
@@ -60,22 +63,39 @@ export class OrderStreamController {
       'Im the eventBusPublisher and I will send this data as a message payload to an Event bus.',
       records
     );
+    //should refactor that
+    const messages: any[] = records.map((r: DynamoDBRecord): any => {
+      if (r.eventName === 'INSERT' && r.dynamodb && r.dynamodb.NewImage) {
+        return DynamoDB.Converter.unmarshall(r.dynamodb.NewImage);
+      }
+    });
+    if (messages.length === 0) return;
+
     const params: PutEventsCommandInput = {
-      Entries: [
-        {
-          Detail: JSON.stringify({ key1: 'value1', key2: 'value2' }),
+      Entries: messages.map((order) => {
+        return {
+          EventBusName: 'order-created-bus',
+          Detail: JSON.stringify(order),
           DetailType: 'transaction',
-          Resources: [
-            'arn:aws:events:ap-southeast-2:587919987702:event-bus/order-created-bus' //RESOURCE_ARN
-          ],
-          Source: 'custom.orderCreated'
-        }
-      ]
+          Resources: [],
+          Source: 'orderCreated'
+        };
+      })
+      // Entries: [
+      //   {
+      //     EventBusName: 'order-created-bus',
+      //     Detail: JSON.stringify({ key1: 'value1', key2: 'value2' }),
+      //     DetailType: 'transaction',
+      //     Resources: [],
+      //     Source: 'orderCreated'
+      //   }
+      // ]
     };
     try {
       await this.eb.publish(params);
       console.log(
-        'order-stream-controller published to event bridge successfully'
+        'order-stream-controller published to event bridge successfully',
+        params
       );
     } catch (e) {
       console.error(
@@ -110,6 +130,8 @@ export class OrderStreamController {
           );
           await this.sns.publish(snsBatch);
           break;
+        case 'eb':
+          break;
         default:
           break;
       }
@@ -142,4 +164,6 @@ export class OrderStreamController {
       })
     };
   }
+
+  private setEventBusParams(messages: PutEventsRequestEntry[]) {}
 }

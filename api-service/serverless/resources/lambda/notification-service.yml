@@ -5,6 +5,6 @@ notification-service:
         eventBus: ${self:custom.orderCreatedEventBus}
         pattern:
           source:
-            - custom.orderCreated
+            - orderCreated
           detail-type:
             - transaction
