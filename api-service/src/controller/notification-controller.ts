@@ -8,7 +8,7 @@ export const notificationController = async (order: any): Promise<void> => {
     const emailData: IEmailData = {
       to: [order.customer.email],
       subject: `We are processing your order #${orderNumber}`,
-      body: `Hello ${order.customer.id},  
+      body: `Hello ${order.customer.email},  
         We received your order #${orderNumber} today at ${convertUtcToAusTimeZone(
         new Date(order.createdAt)
       )} and we are working on it.

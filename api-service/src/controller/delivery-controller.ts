@@ -43,7 +43,7 @@ export const deliveryController = async (
           'delivery-controller email should have been sent via ses-service without issues'
         );
         resolve();
-      }, 60000);
+      }, 30000);
     });
   } catch (e) {
     console.log('Failed on delivery-controller', JSON.stringify(e));
