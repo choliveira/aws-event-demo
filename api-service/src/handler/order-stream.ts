@@ -4,7 +4,7 @@ import { OrderStreamController } from '../controller/order-stream-controller';
 export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
   try {
     console.log('Starting order-stream handler');
-    /** Use this to run it locally */
+    /** Use this when run locally */
     //@ts-ignore
     // const body = JSON.parse(event.body!);
     // const records = body.Records;
