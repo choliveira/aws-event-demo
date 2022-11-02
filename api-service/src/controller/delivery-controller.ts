@@ -2,13 +2,11 @@ import { SQSRecord } from 'aws-lambda';
 import { IEmailData, SesService } from '../aws-services/ses-service';
 import { retrieveAusPostTracker } from '../utils/ausPostTracker';
 
-const sender = 'contact@carlosholiveira.com';
-
 export const deliveryController = async (
   records: SQSRecord[]
 ): Promise<void> => {
   try {
-    const emailService = new SesService(sender);
+    const emailService = new SesService();
     console.log('delivery controller', records);
     const orders: any[] = records.map((r: SQSRecord) => {
       return JSON.parse(r.body);
@@ -38,11 +36,12 @@ export const deliveryController = async (
 
     console.log('delivery-controller just set email data as: ', emailData);
 
-    await emailService.sendEmail(emailData);
-
-    console.log(
-      'delivery-controller email should have been sent via ses-service without issues'
-    );
+    setTimeout(async () => {
+      await emailService.sendEmail(emailData);
+      console.log(
+        'delivery-controller email should have been sent via ses-service without issues'
+      );
+    }, 30000);
   } catch (e) {
     console.log('Failed on delivery-controller', JSON.stringify(e));
   }

@@ -11,7 +11,7 @@ export class SesService {
   private sesClient: SESClient;
   private senderEmailAddress: string;
 
-  constructor(sender: string) {
+  constructor(sender: string = 'contact@carlosholiveira.com') {
     this.senderEmailAddress = sender;
     this.sesClient = new SESClient({
       credentials: {
