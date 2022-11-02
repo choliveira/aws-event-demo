@@ -1,5 +1,5 @@
 delivery-service:
-  timeout: 300
+  timeout: 120
   environment:
     ORDER_TABLE: ${self:custom.orderTable.name}
   handler: src/handler/delivery-service.handler

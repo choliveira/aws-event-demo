@@ -27,11 +27,11 @@ export const deliveryController = async (
       order
     );
     const tracker: string = retrieveAusPostTracker();
-
+    const orderNumber = order.id.substr(order.id.length - 12);
     const emailData: IEmailData = {
       to: [order.customer.email],
-      subject: `We are working on your delivery for order: ${order.id}`,
-      body: `We received the request for ${order.delivery.type} delivery to your address at: ${order.delivery.address} for your order: ${order.id}. Please use this number ${tracker} to track your order on AusPost`
+      subject: `We are working on your delivery for order: ${orderNumber}`,
+      body: `We received the request for ${order.delivery.type} delivery to your address at: ${order.delivery.address} for your order: ${orderNumber}. Please use this number ${tracker} to track your order on AusPost`
     };
 
     console.log('delivery-controller just set email data as: ', emailData);
@@ -43,7 +43,7 @@ export const deliveryController = async (
           'delivery-controller email should have been sent via ses-service without issues'
         );
         resolve();
-      }, 120000);
+      }, 60000);
     });
   } catch (e) {
     console.log('Failed on delivery-controller', JSON.stringify(e));
