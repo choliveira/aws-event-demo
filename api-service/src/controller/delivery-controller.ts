@@ -36,10 +36,15 @@ export const deliveryController = async (
 
     console.log('delivery-controller just set email data as: ', emailData);
 
-    await emailService.sendEmail(emailData);
-    console.log(
-      'delivery-controller email should have been sent via ses-service without issues'
-    );
+    return await new Promise((resolve) => {
+      setTimeout(async () => {
+        await emailService.sendEmail(emailData);
+        console.log(
+          'delivery-controller email should have been sent via ses-service without issues'
+        );
+        resolve();
+      }, 20000);
+    });
   } catch (e) {
     console.log('Failed on delivery-controller', JSON.stringify(e));
   }
