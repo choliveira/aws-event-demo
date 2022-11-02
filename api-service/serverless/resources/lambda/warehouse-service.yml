@@ -1,0 +1,10 @@
+warehouse-service:
+  handler: src/handler/warehouse-service.handler
+  events:
+    - eventBridge:
+        eventBus: ${self:custom.orderCreatedEventBus}
+        pattern:
+          source:
+            - orderCreated
+          detail-type:
+            - transaction

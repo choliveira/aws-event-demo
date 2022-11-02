@@ -37,6 +37,7 @@ functions:
   - ${file(serverless/resources/lambda/customer-service.yml)}
   - ${file(serverless/resources/lambda/loyalty-service.yml)}
   - ${file(serverless/resources/lambda/notification-service.yml)}
+  - ${file(serverless/resources/lambda/warehouse-service.yml)}
 
 resources:
   Resources:
