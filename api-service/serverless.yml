@@ -47,7 +47,7 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: 'process-order-created'
-        DelaySeconds: 35
+        DelaySeconds: 60
         RedrivePolicy:
           deadLetterTargetArn:
             Fn::GetAtt:
