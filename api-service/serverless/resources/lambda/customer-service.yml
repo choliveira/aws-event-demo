@@ -3,4 +3,3 @@ customer-service:
   events:
     - sns:
         arn: 'arn:aws:sns:${self:custom.region}:${self:custom.account}:order-created'
-        batchSize: 5
