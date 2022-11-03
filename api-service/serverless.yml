@@ -38,11 +38,13 @@ functions:
   - ${file(serverless/resources/lambda/loyalty-service.yml)}
   - ${file(serverless/resources/lambda/notification-service.yml)}
   - ${file(serverless/resources/lambda/warehouse-service.yml)}
+  - ${file(serverless/resources/lambda/event-tracker-stream.yml)}
 
 resources:
   Resources:
     paymentTable: ${file(serverless/resources/dynamo/payment-table.yml):paymentTable}
     orderTable: ${file(serverless/resources/dynamo/order-table.yml):orderTable}
+    eventTrackerTable: ${file(serverless/resources/dynamo/event-tracker-table.yml):eventTrackerTable}
     processOrderCreated:
       Type: AWS::SQS::Queue
       Properties:

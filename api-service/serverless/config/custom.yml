@@ -9,7 +9,6 @@ orderCreatedEventBus: order-created-bus
 paymentTable:
   name: ${self:custom.paymentTableName}
   arn: ${self:custom.paymentTableArn}
-
 paymentTableName: !Ref paymentTable
 paymentTableArn: !GetAtt paymentTable.Arn
 
@@ -17,11 +16,17 @@ orderTable:
   name: ${self:custom.orderTableName}
   arn: ${self:custom.orderTableArn}
   StreamArn: ${self:custom.orderTableStreamArn}
-
 orderTableName: !Ref orderTable
 orderTableArn: !GetAtt orderTable.Arn
-
 orderTableStreamArn: !GetAtt orderTable.StreamArn
+
+eventTrackerTable:
+  name: ${self:custom.eventTrackerTableName}
+  arn: ${self:custom.eventTrackerTableArn}
+  streamArn: ${self:custom.eventTrackerTableStreamArn}
+eventTrackerTableName: !Ref eventTrackerTable
+eventTrackerTableArn: !GetAtt eventTrackerTable.Arn
+eventTrackerTableStreamArn: !GetAtt eventTrackerTable.StreamArn
 
 #### serverless offline
 serverless-offline:
