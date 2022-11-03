@@ -18,6 +18,7 @@ provider:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
     ACCESS_KEY: ${param:ACCESS_KEY, env:ACCESS_KEY}
     SECRET_ACCESS_KEY: ${param:SECRET_ACCESS_KEY, env:SECRET_ACCESS_KEY}
+    EVENT_TRACKER_TABLE: ${self:custom.eventTrackerTable.name}
   architecture: arm64
   timeout: 30
   logs:

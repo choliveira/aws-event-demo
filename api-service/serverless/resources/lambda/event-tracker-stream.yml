@@ -1,6 +1,4 @@
 event-tracker-stream:
-  environment:
-  EVENT_TRACKER_TABLE: ${self:custom.eventTrackerTable.name}
   handler: src/handler/event-tracker-stream.handler
   events:
     - stream:
