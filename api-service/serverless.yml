@@ -29,6 +29,7 @@ provider:
     - ${file(serverless/resources/iam/process-order-created-queue-iam.yml):process-order-created-queue-iam}
     - ${file(serverless/resources/iam/dql-process-order-created-queue-iam.yml):dql-process-order-created-queue-iam}
     - ${file(serverless/resources/iam/create-order-topic-iam.yml):create-order-topic-iam}
+    - ${file(serverless/resources/iam/event-tracker-table-iam.yml):event-tracker-table-iam}
 
 functions:
   - ${file(serverless/resources/lambda/post-payment.yml)}
