@@ -1,10 +1,10 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import { notificationController } from '../controller/notification-controller';
+import { trackEvent } from '../model/event-tracker-model';
 
 export const handler = async (
   event: EventBridgeEvent<string, string>
 ): Promise<boolean> => {
-  console.log(`Received event: ${JSON.stringify(event)}`);
   /** Use this when run locally */
   //@ts-ignore
   // const body = JSON.parse(event.body!);
@@ -15,9 +15,14 @@ export const handler = async (
     'notification-service handler received order message from event bus',
     order
   );
+  await trackEvent({
+    source: 'notification-service',
+    event: 'received-message-from-event-bus',
+    payload: JSON.stringify(event)
+  });
   await notificationController(order);
-  return true;
   console.log(
     'Email dispatched from notification-service, just check recipient inbox'
   );
+  return true;
 };

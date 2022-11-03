@@ -1,4 +1,5 @@
 import { IEmailData, SesService } from '../aws-services/ses-service';
+import { trackEvent } from '../model/event-tracker-model';
 import { convertUtcToAusTimeZone } from '../utils/date';
 
 export const notificationController = async (order: any): Promise<void> => {
@@ -19,6 +20,12 @@ export const notificationController = async (order: any): Promise<void> => {
     console.log('notification-controller just set email data as: ', emailData);
 
     await emailService.sendEmail(emailData);
+
+    await trackEvent({
+      source: 'notification-service',
+      event: 'send-order-confirmation-email',
+      payload: JSON.stringify(emailData)
+    });
 
     console.log(
       'notification-controller email should have been sent via ses-service without issues'
