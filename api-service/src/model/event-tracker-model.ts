@@ -12,6 +12,7 @@ const EventTrackerSchema = new dynamoose.Schema(
       type: String,
       default: uuidv4()
     },
+    source: String,
     event: String,
     payload: String
   },
