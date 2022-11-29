@@ -22,7 +22,17 @@ export const eventTrackerController = async (records: DynamoDBRecord[]) => {
 
     for await (const record of records) {
       const event = DynamoDB.Converter.unmarshall(record.dynamodb?.NewImage!);
+      console.log(
+        '------------------- will send message to ws -------------------'
+      );
       await apiServices.sendMessageToConnection(event);
+      console.log('----------Message sent---------', event);
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error(
+      'Error on event-tracker-steam-controller.ts',
+      JSON.stringify(error)
+    );
+    throw new Error('Error on event-tracker-steam-controller.ts');
+  }
 };

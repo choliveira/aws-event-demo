@@ -7,5 +7,6 @@ connection-table-iam:
     - dynamodb:Query
     - dynamodb:BatchGetItem
     - dynamodb:BatchWriteItem
+    - dynamodb:DeleteItem
   Resource:
     - ${self:custom.connectionTable.arn}
