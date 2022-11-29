@@ -8,4 +8,4 @@ connection-table-iam:
     - dynamodb:BatchGetItem
     - dynamodb:BatchWriteItem
   Resource:
-    - ${self:custom.paymentTable.arn}
+    - ${self:custom.connectionTable.arn}
