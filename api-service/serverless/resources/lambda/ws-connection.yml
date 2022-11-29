@@ -1,0 +1,9 @@
+ws-connection:
+  environment:
+    CONNECTION_TABLE: ${self:custom.connectionTable.name}
+  handler: src/handler/ws-connection.handler
+  events:
+    - websocket:
+        route: $connect
+    - websocket:
+        route: $disconnect

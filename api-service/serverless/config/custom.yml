@@ -28,6 +28,11 @@ eventTrackerTableName: !Ref eventTrackerTable
 eventTrackerTableArn: !GetAtt eventTrackerTable.Arn
 eventTrackerTableStreamArn: !GetAtt eventTrackerTable.StreamArn
 
+connectionTable:
+  name: ${self:custom.connectionTableName}
+  arn: ${self:custom.connectionTableArn}
+connectionTableName: !Ref connectionTable
+connectionTableArn: !GetAtt connectionTable.Arn
 #### serverless offline
 serverless-offline:
   httpPort: 4000

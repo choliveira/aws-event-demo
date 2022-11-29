@@ -23,6 +23,10 @@ provider:
   timeout: 30
   logs:
     restApi: true
+    websocket: true
+  websocketsApiName: ws-event-list
+  websocketsApiRouteSelectionExpression: $request.body.action
+  websocketsDescription: Custom Serverless Websockets to list all events that happened in an async way
   iamRoleStatements:
     - ${file(serverless/resources/iam/payment-table-iam.yml):payment-table-iam}
     - ${file(serverless/resources/iam/order-table-iam.yml):order-table-iam}
@@ -30,6 +34,7 @@ provider:
     - ${file(serverless/resources/iam/dql-process-order-created-queue-iam.yml):dql-process-order-created-queue-iam}
     - ${file(serverless/resources/iam/create-order-topic-iam.yml):create-order-topic-iam}
     - ${file(serverless/resources/iam/event-tracker-table-iam.yml):event-tracker-table-iam}
+    - ${file(serverless/resources/iam/connection-table-iam.yml):connection-table-iam}
 
 functions:
   - ${file(serverless/resources/lambda/post-payment.yml)}
@@ -41,12 +46,14 @@ functions:
   - ${file(serverless/resources/lambda/notification-service.yml)}
   - ${file(serverless/resources/lambda/warehouse-service.yml)}
   - ${file(serverless/resources/lambda/event-tracker-stream.yml)}
+  - ${file(serverless/resources/lambda/ws-connection.yml)}
 
 resources:
   Resources:
     paymentTable: ${file(serverless/resources/dynamo/payment-table.yml):paymentTable}
     orderTable: ${file(serverless/resources/dynamo/order-table.yml):orderTable}
     eventTrackerTable: ${file(serverless/resources/dynamo/event-tracker-table.yml):eventTrackerTable}
+    connectionTable: ${file(serverless/resources/dynamo/connection-table.yml):connectionTable}
     processOrderCreated:
       Type: AWS::SQS::Queue
       Properties:

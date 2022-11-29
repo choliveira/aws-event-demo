@@ -2,7 +2,7 @@ import { DynamoDBStreamEvent } from 'aws-lambda';
 
 export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
   try {
-    console.log('Starting event-tracker-stream handler', event);
+    console.log('Starting event-tracker-stream handler', JSON.stringify(event));
     /** Use this when run locally */
     //@ts-ignore
     // const body = JSON.parse(event.body!);
