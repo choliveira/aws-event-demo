@@ -1,6 +1,7 @@
 event-tracker-stream:
   environment:
     WEBSOCKETS_API_ENDPOINT: 'h6k4l4dune.execute-api.ap-southeast-2.amazonaws.com/dev'
+    CONNECTION_TABLE: ${self:custom.connectionTable.name}
   handler: src/handler/event-tracker-stream.handler
   events:
     # - http:
