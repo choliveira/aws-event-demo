@@ -8,7 +8,7 @@ export class ApiGatewayManagementApiService {
     this.apiGateway = new ApiGatewayManagementApi({
       apiVersion: '2018-11-29',
       endpoint: process.env.IS_OFFLINE
-        ? `http://${process.env.WEBSOCKETS_API_ENDPOINT}`
+        ? `http://localhost:3001`
         : `https://${process.env.WEBSOCKETS_API_ENDPOINT}`
     });
     this.connectionId = connectionId;

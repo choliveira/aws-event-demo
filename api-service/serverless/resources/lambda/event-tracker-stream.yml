@@ -1,6 +1,11 @@
 event-tracker-stream:
+  environment:
+    WEBSOCKETS_API_ENDPOINT: 'h6k4l4dune.execute-api.ap-southeast-2.amazonaws.com/dev'
   handler: src/handler/event-tracker-stream.handler
   events:
+    # - http:
+    #     method: post
+    #     path: /stream-events
     - stream:
         type: dynamodb
         batchSize: 10

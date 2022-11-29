@@ -1,4 +1,5 @@
 import { DynamoDBStreamEvent } from 'aws-lambda';
+import { eventTrackerController } from '../controller/event-tracker-stream-controller';
 
 export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
   try {
@@ -7,6 +8,9 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
     //@ts-ignore
     // const body = JSON.parse(event.body!);
     // const records = body.Records;
+
+    const records = event.Records;
+    await eventTrackerController(records);
   } catch (error: any) {
     console.log(
       'Error found in the event-tracker-stream handler',
