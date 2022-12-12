@@ -1,9 +1,6 @@
 notification-service:
   handler: src/handler/notification-service.handler
   events:
-    # - http:
-    #     method: post
-    #     path: /notification
     - eventBridge:
         eventBus: ${self:custom.orderCreatedEventBus}
         pattern:

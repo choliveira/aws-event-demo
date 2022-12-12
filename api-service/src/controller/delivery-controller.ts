@@ -37,6 +37,7 @@ export const deliveryController = async (
     });
 
     const orderNumber = order.id.substr(order.id.length - 12);
+
     const emailData: IEmailData = {
       to: [order.customer.email],
       subject: `We are working on your delivery for order: ${orderNumber}`,
