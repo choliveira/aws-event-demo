@@ -1,6 +1,5 @@
 import { SQSEvent } from 'aws-lambda';
 import { deliveryController } from '../controller/delivery-controller';
-import { trackEvent } from '../model/event-tracker-model';
 
 export const handler = async (event: SQSEvent): Promise<void> => {
   try {
@@ -15,11 +14,11 @@ export const handler = async (event: SQSEvent): Promise<void> => {
       JSON.stringify(orders)
     );
 
-    await trackEvent({
-      source: 'delivery-service',
-      event: 'received-message-from-sqs',
-      payload: JSON.stringify(orders)
-    });
+    // await trackEvent({
+    //   source: 'delivery-service',
+    //   event: 'received-message-from-sqs',
+    //   payload: JSON.stringify(orders)
+    // });
 
     await deliveryController(orders);
     console.log('Email dispatched, just check recipient inbox');

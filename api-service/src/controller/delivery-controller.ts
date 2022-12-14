@@ -1,6 +1,5 @@
 import { SQSRecord } from 'aws-lambda';
 import { IEmailData, SesService } from '../aws-services/ses-service';
-import { trackEvent } from '../model/event-tracker-model';
 import { retrieveAusPostTracker } from '../utils/ausPostTracker';
 
 export const deliveryController = async (
@@ -30,11 +29,11 @@ export const deliveryController = async (
 
     const tracker: string = retrieveAusPostTracker();
 
-    await trackEvent({
-      source: 'order-stream-service',
-      event: 'talk-to-australia-post-start-delivery',
-      payload: JSON.stringify({ tracker })
-    });
+    // await trackEvent({
+    //   source: 'order-stream-service',
+    //   event: 'talk-to-australia-post-start-delivery',
+    //   payload: JSON.stringify({ tracker })
+    // });
 
     const orderNumber = order.id.substr(order.id.length - 12);
 
@@ -50,11 +49,11 @@ export const deliveryController = async (
       setTimeout(async () => {
         await emailService.sendEmail(emailData);
 
-        await trackEvent({
-          source: 'delivery-service',
-          event: 'send-delivery-email',
-          payload: JSON.stringify(emailData)
-        });
+        // await trackEvent({
+        //   source: 'delivery-service',
+        //   event: 'send-delivery-email',
+        //   payload: JSON.stringify(emailData)
+        // });
 
         console.log(
           'delivery-controller email should have been sent via ses-service without issues'

@@ -1,6 +1,5 @@
 import { DynamoDBStreamEvent } from 'aws-lambda';
 import { OrderStreamController } from '../controller/order-stream-controller';
-import { trackEvent } from '../model/event-tracker-model';
 
 export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
   try {
@@ -13,11 +12,11 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<any> => {
     const records = event.Records;
     const orderStreamController = new OrderStreamController();
 
-    await trackEvent({
-      source: 'order-stream-service',
-      event: 'received-stream-from-order-table',
-      payload: JSON.stringify(records)
-    });
+    // await trackEvent({
+    //   source: 'order-stream-service',
+    //   event: 'received-stream-from-order-table',
+    //   payload: JSON.stringify(records)
+    // });
 
     //1 - Produce a message to an SQS Queue
     await orderStreamController.sqsProducer(records);

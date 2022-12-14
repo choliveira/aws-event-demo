@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { EventBridgeService } from '../aws-services/event-bridge-service';
 import { SnsService } from '../aws-services/sns-service';
 import { SqsService } from '../aws-services/sqs-service';
-import { trackEvent } from '../model/event-tracker-model';
 
 export class OrderStreamController {
   private sqs: SqsService;
@@ -85,11 +84,11 @@ export class OrderStreamController {
     }
     try {
       await this.eb.publish(params);
-      await trackEvent({
-        source: 'order-stream-service',
-        event: 'send-order-message-to-event-bus',
-        payload: JSON.stringify(params)
-      });
+      // await trackEvent({
+      //   source: 'order-stream-service',
+      //   event: 'send-order-message-to-event-bus',
+      //   payload: JSON.stringify(params)
+      // });
       console.log(
         'order-stream-controller published to event bridge successfully',
         params
@@ -123,19 +122,19 @@ export class OrderStreamController {
             sqsBatch
           );
           await this.sqs.sendBatchSqsMessage(sqsBatch);
-          await trackEvent({
-            source: 'order-stream-service',
-            event: 'send-order-message-to-sqs',
-            payload: JSON.stringify(sqsBatch)
-          });
+          // await trackEvent({
+          //   source: 'order-stream-service',
+          //   event: 'send-order-message-to-sqs',
+          //   payload: JSON.stringify(sqsBatch)
+          // });
           break;
         case 'sns':
           const snsBatch = this.setSnsParams(messages);
-          await trackEvent({
-            source: 'order-stream-service',
-            event: 'send-order-message-to-sns',
-            payload: JSON.stringify(messages)
-          });
+          // await trackEvent({
+          //   source: 'order-stream-service',
+          //   event: 'send-order-message-to-sns',
+          //   payload: JSON.stringify(messages)
+          // });
           console.log(
             'Will publish a batch of sns messages from order-steam-controller.ts',
             snsBatch
