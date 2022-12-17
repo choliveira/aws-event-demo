@@ -5,7 +5,7 @@ order-stream:
   events:
     - stream:
         type: dynamodb
-        batchSize: 10 #To match with SQS sendBatchSqsMessage
+        batchSize: 10
         startingPosition: LATEST
         maximumRecordAgeInSeconds: 60
         arn: ${self:custom.orderTableStreamArn}
